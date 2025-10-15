@@ -9,11 +9,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      project_id: {
-        type: Sequelize.NUMBER
+      projectId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Projects',
+          key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
-      member_id: {
-        type: Sequelize.NUMBER
+      memberId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Members',
+          key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
       createdAt: {
         allowNull: false,

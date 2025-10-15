@@ -14,11 +14,55 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Project.init({
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    start_date: DataTypes.DATE,
-    end_date: DataTypes.DATE,
-    status: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull : false,
+      validate: {
+        notNull : {
+          msg: "Name is required"
+        },
+        notEmpty: {
+          msg: "Name is required"
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull : false,
+      validate: {
+        notNull : {
+          msg: "Description is required"
+        },
+        notEmpty: {
+          msg: "Description is required"
+        }
+      }
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull : {
+          msg: "Start date is required"
+        },
+        notEmpty: {
+          msg: "Start date is required"
+        }
+      }
+    },
+    endDate: DataTypes.DATE,
+    status: {
+      type: DataTypes.STRING,
+      allowNull : false,
+      validate: {
+        notNull : {
+          msg: "Status is required"
+        },
+        notEmpty: {
+          msg: "Status is required"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Project',

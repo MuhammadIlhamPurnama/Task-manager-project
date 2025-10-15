@@ -14,13 +14,79 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Task.init({
-    project_id: DataTypes.NUMBER,
-    assigned_to: DataTypes.NUMBER,
-    title: DataTypes.STRING,
-    description: DataTypes.STRING,
-    status: DataTypes.STRING,
-    start_date: DataTypes.DATE,
-    end_date: DataTypes.DATE
+    projectId: {
+      type : DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Project is required"
+        },
+        notNull: {
+          msg: "Project is required"
+        }
+      }
+    },
+    assignedId: {
+      type : DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Member is required"
+        },
+        notNull: {
+          msg: "Member is required"
+        }
+      }
+    },
+    title: {
+      type : DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Title is required"
+        },
+        notNull: {
+          msg: "Title is required"
+        }
+      }
+    },
+    description: {
+      type : DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Description is required"
+        },
+        notNull: {
+          msg: "Description is required"
+        }
+      }
+    },
+    status: {
+      type : DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Status is required"
+        },
+        notNull: {
+          msg: "Status is required"
+        }
+      }
+    },
+    startDate: {
+      type : DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Start date is required"
+        },
+        notNull: {
+          msg: "Start date is required"
+        }
+      }
+    },
+    endDate: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Task',

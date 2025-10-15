@@ -14,9 +14,33 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   TaskLog.init({
-    task_id: DataTypes.NUMBER,
-    action: DataTypes.STRING,
-    note: DataTypes.STRING
+    taskId: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Task is required"
+        },
+        notNull: {
+          msg: "Task is required"
+        }
+      }
+    },
+    action: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Action is required"
+        },
+        notNull: {
+          msg: "Action is required"
+        }
+      }
+    },
+    note: {
+      type: DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'TaskLog',

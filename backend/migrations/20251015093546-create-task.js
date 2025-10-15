@@ -9,11 +9,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      project_id: {
-        type: Sequelize.NUMBER
+      projectId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Projects',
+          key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
-      assigned_to: {
-        type: Sequelize.NUMBER
+      assignedId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Members',
+          key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
       title: {
         type: Sequelize.STRING
@@ -22,12 +34,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "Unstarted"
       },
-      start_date: {
+      startDate: {
         type: Sequelize.DATE
       },
-      end_date: {
+      endDate: {
         type: Sequelize.DATE
       },
       createdAt: {

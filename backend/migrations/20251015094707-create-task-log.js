@@ -9,11 +9,18 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      task_id: {
-        type: Sequelize.NUMBER
+      taskId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Tasks',
+          key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
       action: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "Unstarted"
       },
       note: {
         type: Sequelize.STRING

@@ -14,8 +14,30 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ProjectMember.init({
-    project_id: DataTypes.NUMBER,
-    member_id: DataTypes.NUMBER
+    projectId: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Project is required"
+        },
+        notNull: {
+          msg: "Project is required"
+        }
+      }
+    },
+    memberId: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Member is required"
+        },
+        notNull: {
+          msg: "Member is required"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'ProjectMember',
