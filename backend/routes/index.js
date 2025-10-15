@@ -4,8 +4,8 @@ const userRouter = require('./user')
 const memberRouter = require('./member')
 const authentication = require('../middlewares/authentication')
 
-router.use('/user', userRouter)
+router.use('/users', userRouter)
 router.use(authentication)
-router.use('/member', memberRouter)
+router.use('/members', memberRouter)
 
 module.exports = router
