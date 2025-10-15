@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Task.init({
     projectId: {
-      type : DataTypes.NUMBER,
+      type : DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: {
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     assignedId: {
-      type : DataTypes.NUMBER,
+      type : DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: {

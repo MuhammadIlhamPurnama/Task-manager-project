@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   TaskLog.init({
     taskId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: {

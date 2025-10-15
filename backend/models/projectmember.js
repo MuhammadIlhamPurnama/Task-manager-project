@@ -11,11 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ProjectMember.belongsTo(models.Project, { foreignKey: 'projectId' })
+      ProjectMember.belongsTo(models.Member, { foreignKey: 'memberId' })
     }
   }
   ProjectMember.init({
     projectId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: {
@@ -27,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     memberId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: {
