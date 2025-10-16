@@ -1,11 +1,13 @@
-import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router';
+import LoginPages from './pages/LoginPages';
 
-const App = () => {
+export default function App() {
   return (
-     <h1 class="text-3xl font-bold underline text-red-400">
-      Hello world!
-    </h1>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/login" element={<LoginPages></LoginPages>} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
