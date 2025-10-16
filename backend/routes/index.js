@@ -4,6 +4,7 @@ const userRouter = require('./user')
 const memberRouter = require('./member')
 const projectRouter = require('./project')
 const taskRouter = require('./task')
+const dashboardRouter = require('./dashboard')
 const authentication = require('../middlewares/authentication')
 
 router.use('/users', userRouter)
@@ -11,5 +12,6 @@ router.use(authentication)
 router.use('/members', memberRouter)
 router.use('/projects', projectRouter )
 router.use('/tasks', taskRouter)
+router.use('/dashboard', dashboardRouter)
 
 module.exports = router
