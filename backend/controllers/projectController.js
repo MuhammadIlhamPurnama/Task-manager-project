@@ -1,4 +1,4 @@
-const { Project, ProjectMember, Member } = require('../models')
+const { Project, ProjectMember, Member, Task } = require('../models')
 
 class ProjectController {
   static async addNewProject(req,res,next) {
@@ -50,7 +50,26 @@ class ProjectController {
     try {
       const {id} = req.params
 
-      const project = await Project.findByPk(Number(id))
+      const project = await Project.findByPk(Number(id), {
+        include: [
+          {
+            model: Member,
+            attributes: ['id', 'name', 'role', 'email'],
+            through: { attributes: [] } // hilangkan data pivot ProjectMember
+          },
+          {
+            model: Task,
+            attributes: ['id', 'title', 'description', 'status', 'startDate', 'endDate',  'assignedId'],
+            include: [
+              {
+                model: Member,
+                as: 'Assignee',
+                attributes: ['id', 'name', 'email']
+              }
+            ]
+          }
+        ]
+      })
 
       if (!project) {
         throw {name: "NotFound", message: "Project not found"}

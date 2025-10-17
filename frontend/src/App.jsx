@@ -4,6 +4,7 @@ import DashboardPage from './pages/DashboardPage';
 import MainLayout from './layouts/MainLayouts';
 import ProjectsPage from './pages/ProjectsPage';
 import MembersPage from './pages/MembersPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="/projects" element={<ProjectsPage />}/>
+           <Route path="projects/:id" element={<ProjectDetailPage />} />
           <Route path="/members" element={<MembersPage />}/>
         </Route>
       </Routes>
