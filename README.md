@@ -82,7 +82,7 @@ npx sequelize-cli db:seed:all
 
 ## Jalankan server
 ```bash
-npm start
+npm run dev
 ```
 
 The backend server will run on `http://localhost:3000`
