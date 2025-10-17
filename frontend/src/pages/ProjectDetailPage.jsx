@@ -290,7 +290,7 @@ const ProjectDetailPage = () => {
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <div className="text-red-600 mb-4">Error: {error}</div>
         <button
-          onClick={() => navigate('/dashboard/projects')}
+          onClick={() => navigate('/projects')}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
         >
           Back to Projects
@@ -313,7 +313,7 @@ const ProjectDetailPage = () => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/dashboard/projects')}
+            onClick={() => navigate('/projects')}
             className="text-gray-500 hover:text-gray-700 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

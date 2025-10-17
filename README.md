@@ -112,3 +112,23 @@ User credential :
 
 email : admin@gmail.com
 password admin123
+
+
+## Flow Aplikasi 
+
+- Login sebagai admin 
+- Halaman dashboard menampilkan statistik sederhana project, member dan task
+- Halaman projects menampilkan project - project yang ada (disertai pagination, search, filter dan sort)
+- Pilih salah satu project untuk masuk ke detail project
+
+- Pada halaman detail project :
+ - Fitur edit data project
+ - Fitur tambah Member kedalam project
+ - Fitur tambah task (untuk tambah task minimal tambahkan satu member telebih dahulu)
+ - Fitur edit task
+
+- Pada halaman Members menampilkan member - member yang ada (disertai pagination, search, filter dan sort)
+ - Fitur add member
+ - Fitur edit member
+ 
+
