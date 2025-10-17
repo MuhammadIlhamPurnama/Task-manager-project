@@ -1,4 +1,5 @@
 const { Member } = require('../models')
+const { Op } = require('sequelize')
 
 class MemberController {
   static async addNewMember(req,res,next) {
@@ -15,10 +16,71 @@ class MemberController {
 
   static async getMembers(req,res,next) {
     try {
-      
-      const members = await Member.findAll()
+      let { page = 1, limit = 10, sort, role, search } = req.query
 
-      res.status(200).json({message: "Successfully get members data", members})
+      page = +page
+      limit = +limit
+
+      const offset = (page - 1) * limit
+
+      let queryOption = {
+        limit,
+        offset,
+        where: {},
+        order: [],
+        attributes: ['id', 'name', 'role', 'email', 'createdAt', 'updatedAt']
+      }
+
+      // === SORT ===
+      if (sort && typeof sort === "string") {
+        if (sort.charAt(0) === "-") {
+          queryOption.order.push([sort.slice(1), "DESC"])
+        } else {
+          queryOption.order.push([sort, "ASC"])
+        }
+      } else {
+        // Default sort by createdAt DESC
+        queryOption.order.push(["createdAt", "DESC"])
+      }
+
+      // === FILTER BY ROLE ===
+      if (role) {
+        queryOption.where.role = {
+          [Op.iLike]: `%${role}%`
+        }
+      }
+
+      // === SEARCH === (by name or email)
+      if (search) {
+        queryOption.where[Op.or] = [
+          {
+            name: {
+              [Op.iLike]: `%${search}%`
+            }
+          },
+          {
+            email: {
+              [Op.iLike]: `%${search}%`
+            }
+          }
+        ]
+      }
+
+      // === Query members
+      const { rows: members, count: totalItems } = await Member.findAndCountAll(queryOption)
+
+      const totalPages = Math.ceil(totalItems / limit)
+
+      res.status(200).json({
+        message: "Successfully get members data",
+        members,
+        pagination: {
+          totalItems,
+          totalPages,
+          currentPage: page,
+          limit
+        }
+      })
     } catch (error) {
       next(error)
     }

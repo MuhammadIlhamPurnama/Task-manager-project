@@ -1,4 +1,5 @@
 const { Project, ProjectMember, Member, Task } = require('../models')
+const { Op } = require('sequelize')
 
 class ProjectController {
   static async addNewProject(req,res,next) {
@@ -38,9 +39,70 @@ class ProjectController {
 
   static async getProjects(req,res,next){
     try {
-      const projects = await Project.findAll()
+      let { page = 1, limit = 6, sort, status, search } = req.query
 
-      res.status(200).json({message: "Successfully get all projects", projects})
+      page = +page
+      limit = +limit
+
+      const offset = (page - 1) * limit
+
+      let queryOption = {
+        limit,
+        offset,
+        where: {},
+        order: [],
+        include: [
+          {
+            model: Member,
+            attributes: ['id', 'name', 'role', 'email'],
+            through: { attributes: [] }
+          }
+        ]
+      }
+
+      // === SORT ===
+      if (sort && typeof sort === "string") {
+        if (sort.charAt(0) === "-") {
+          queryOption.order.push([sort.slice(1), "DESC"])
+        } else {
+          queryOption.order.push([sort, "ASC"])
+        }
+      } else {
+        // Default sort by createdAt DESC
+        queryOption.order.push(["createdAt", "DESC"])
+      }
+
+      // === FILTER BY STATUS ===
+      if (status) {
+        queryOption.where.status = status
+      }
+
+      // === SEARCH === (by name or description)
+      if (search) {
+        queryOption.where[Op.or] = [
+          {
+            name: {
+              [Op.iLike]: `%${search}%`
+            }
+          }
+        ]
+      }
+
+      // === Query projects
+      const { rows: projects, count: totalItems } = await Project.findAndCountAll(queryOption)
+
+      const totalPages = Math.ceil(totalItems / limit)
+
+      res.status(200).json({
+        message: "Successfully get all projects",
+        projects,
+        pagination: {
+          totalItems,
+          totalPages,
+          currentPage: page,
+          limit
+        }
+      })
     } catch (error) {
       next(error)
     }
@@ -101,7 +163,6 @@ class ProjectController {
 
   static async addNewMemberToProject(req,res,next) {
     try {
-      console.log('test2')
       const projectId = req.params.id
       const { memberId } = req.body
 
@@ -116,6 +177,15 @@ class ProjectController {
       if (!checkMember) {
         throw {name: "NotFound", message: "Member not found"}
       }
+
+      // Check if member already in project
+      const existingMember = await ProjectMember.findOne({
+        where: { projectId, memberId }
+      })
+
+      if (existingMember) {
+        throw {name: "BadRequest", message: "Member already in this project"}
+      }
       
       const result = await ProjectMember.create({projectId, memberId})
 
@@ -127,7 +197,6 @@ class ProjectController {
 
   static async getMembersFromProject(req,res,next) {
     try {
-      console.log('test')
       const {id} = req.params
 
       const members = await ProjectMember.findAll({where: { projectId: id}})
@@ -137,6 +206,7 @@ class ProjectController {
       next(error)
     }
   }
+
   static async getProjectWithMembers(req, res, next) {
     try {
       const { id } = req.params
