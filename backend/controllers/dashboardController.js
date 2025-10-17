@@ -17,16 +17,20 @@ class DashboardController {
         attributes: [
           'id',
           'name',
+          'role',
           [sequelize.fn('COUNT', sequelize.col('ProjectMembers.projectId')), 'projectsCount'],
           [sequelize.fn('COUNT', sequelize.col('Tasks.id')), 'tasksAssigned'],
-          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "Tasks"."status" IN ('Done','Selesai','Completed') THEN 1 ELSE 0 END`)), 'tasksCompleted']
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "Tasks"."status" = 'Completed' THEN 1 ELSE 0 END`)), 'tasksCompleted']
         ],
         include: [
-          { model: ProjectMember, attributes: [] },
-          { model: Task, as: 'Tasks', attributes: [], include: [], required: false }
+          { model: ProjectMember, attributes: [], required: false },
+          { model: Task, as: 'Tasks', attributes: [], required: false }
         ],
         group: ['Member.id'],
-        order: [[sequelize.literal('"tasksAssigned"'), 'DESC']],
+        having: sequelize.literal(`SUM(CASE WHEN "Tasks"."status" = 'Completed' THEN 1 ELSE 0 END) > 0`),
+        order: [[sequelize.literal('"tasksCompleted"'), 'DESC']],
+        limit: 5,
+        subQuery: false,
         raw: true
       })
 
@@ -34,7 +38,7 @@ class DashboardController {
         message: 'Dashboard summary',
         totals: { totalProjects, totalTasks },
         tasksByStatus,
-        membersSummary
+        topMembers: membersSummary
       })
     } catch (error) {
       next(error)
@@ -61,7 +65,7 @@ class DashboardController {
         attributes: [
           ['assignedId', 'memberId'],
           [sequelize.fn('COUNT', sequelize.col('Task.id')), 'tasksAssigned'],
-          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "Task"."status" IN ('Done','Selesai','Completed') THEN 1 ELSE 0 END`)), 'tasksCompleted']
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "Task"."status" = 'Completed' THEN 1 ELSE 0 END`)), 'tasksCompleted']
         ],
         include: [{ model: Member, as: 'Assignee', attributes: ['id','name'] }],
         group: [sequelize.literal(`"Task"."assignedId"`), sequelize.literal(`"Assignee"."id"`), sequelize.literal(`"Assignee"."name"`)],
@@ -87,19 +91,25 @@ class DashboardController {
         attributes: [
           'id',
           'name',
-          [sequelize.fn('COUNT', sequelize.col('Tasks.id')), 'tasksAssigned']
+          'role',
+          [sequelize.fn('COUNT', sequelize.col('Tasks.id')), 'tasksAssigned'],
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "Tasks"."status" = 'Completed' THEN 1 ELSE 0 END`)), 'tasksCompleted']
         ],
         include: [
           { model: Task, attributes: [], required: false }
         ],
         group: ['Member.id'],
-        order: [[sequelize.literal('"tasksAssigned"'), 'DESC']],
-        limit: 20,
-        raw: true,
-        subQuery: false
+        having: sequelize.literal(`SUM(CASE WHEN "Tasks"."status" = 'Completed' THEN 1 ELSE 0 END) > 0`),
+        order: [[sequelize.literal('"tasksCompleted"'), 'DESC']],
+        limit: 5,
+        subQuery: false,
+        raw: true
       })
 
-      res.status(200).json({ message: 'Members leaderboard', leaderboard })
+      res.status(200).json({ 
+        message: 'Top 5 members by completed tasks', 
+        leaderboard 
+      })
     } catch (error) {
       next(error)
     }

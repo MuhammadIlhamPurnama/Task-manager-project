@@ -56,14 +56,26 @@ class TaskController {
   static async updateTaskById(req, res, next) {
     try {
       const { id } = req.params
-      const { title, description, startDate, endDate, status, assigneeId } = req.body
+      const { title, description, startDate, endDate, status, assignedId } = req.body
 
       const task = await Task.findByPk(Number(id))
       if (!task) throw { name: 'NotFound', message: 'Task not found' }
 
-      task.set({ title, description, startDate,endDate, status, assigneeId })
+      // Simpan status lama untuk logging
+      const oldStatus = task.status
+
+      task.set({ title, description, startDate, endDate, status, assignedId })
       await task.validate()
       await task.save()
+
+      // Cek apakah ada perubahan status
+      if (status && oldStatus !== status) {
+        await TaskLog.create({
+          taskId: task.id,
+          action: 'Status Changed',
+          note: `Changed from ${oldStatus || 'undefined'} to ${status}`
+        })
+      }
 
       res.status(200).json({ message: `Successfully update task ${task.title}`, task })
     } catch (error) {
